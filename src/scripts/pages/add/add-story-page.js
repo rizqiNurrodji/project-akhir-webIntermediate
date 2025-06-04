@@ -119,7 +119,7 @@ export default class AddStoryPage {
                 return;
             }
 
-            // Ambil gambar diam dari video ke canvas (tidak ditampilkan ke UI)
+            // Ambil gambar dari video ke canvas
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -131,7 +131,15 @@ export default class AddStoryPage {
             const imageDataUrl = canvas.toDataURL('image/jpeg');
             photoPreview.src = imageDataUrl;
             previewContainer.classList.remove('hidden');
+
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+            video.style.display = 'none';
+            placeholderText.style.display = 'block';
+            stream = null; // Bersihkan variabel stream
+            clearTimeout(stopTimeout); // Hentikan timeout jika masih aktif
         });
+
     }
 
 
