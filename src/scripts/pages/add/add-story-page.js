@@ -82,11 +82,9 @@ export default class AddStoryPage {
 
         openCameraBtn.addEventListener('click', async () => {
             try {
-                // Stop stream sebelumnya
                 if (stream) {
                     stream.getTracks().forEach(track => track.stop());
                 }
-
                 photoPreview.src = '';
                 previewContainer.classList.add('hidden');
                 this.imageBlob = null;
@@ -95,7 +93,7 @@ export default class AddStoryPage {
                 video.srcObject = stream;
 
                 video.style.display = 'block';
-                placeholderText.style.display = 'none'; // HILANGKAN TEKS SAAT KAMERA AKTIF
+                placeholderText.style.display = 'none';
 
                 video.play();
 
@@ -103,8 +101,9 @@ export default class AddStoryPage {
                     if (stream) {
                         stream.getTracks().forEach(track => track.stop());
                         video.srcObject = null;
-                        placeholderText.style.display = 'block'; // TAMPILKAN KEMBALI JIKA STREAM BERHENTI
+                        placeholderText.style.display = 'block';
                         video.style.display = 'none';
+                        stream = null;
                     }
                 }, 30000);
             } catch (err) {
@@ -119,7 +118,6 @@ export default class AddStoryPage {
                 return;
             }
 
-            // Ambil gambar dari video ke canvas
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -136,11 +134,12 @@ export default class AddStoryPage {
             video.srcObject = null;
             video.style.display = 'none';
             placeholderText.style.display = 'block';
-            stream = null; // Bersihkan variabel stream
-            clearTimeout(stopTimeout); // Hentikan timeout jika masih aktif
-        });
 
+            stream = null;
+            clearTimeout(stopTimeout);
+        });
     }
+
 
 
     initFileInput() {
