@@ -12,7 +12,7 @@ module.exports = merge(common, {
           'style-loader',
           'css-loader',
         ],
-      },
+      },  
     ],
   },
   devServer: {

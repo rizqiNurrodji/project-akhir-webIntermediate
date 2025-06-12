@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "start-dev": "webpack serve --config webpack.dev.js",
-    "serve": "http-server dist -a localhost -p 3001"
+    "serve": "http-server dist"
   },
   "keywords": [],
   "author": "Mohammad Rizqi Nurrodji <rizqinurrodji@student.ub.ac.id>",

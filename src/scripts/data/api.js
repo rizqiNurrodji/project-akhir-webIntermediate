@@ -64,7 +64,7 @@ export async function loginUser(email, password) {
       }),
     });
 
-    const data = await response.json(); 
+    const data = await response.json();
 
     if (!response.ok || data.error) {
       throw new Error(data.message || 'Gagal login user');
@@ -73,7 +73,7 @@ export async function loginUser(email, password) {
     saveToken(data.loginResult.token);
     return data;
   } catch (error) {
-    console.error('Error logging in user:', error.message); 
+    console.error('Error logging in user:', error.message);
     throw error;
   }
 }
@@ -81,29 +81,39 @@ export async function loginUser(email, password) {
 // get all stories function
 export async function getAllStories() {
   const token = getToken();
-
+  console.log('Token dari localStorage:', token);
+  
   try {
     const response = await fetch(ENDPOINTS.GET_ALL_STORIES, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
     });
 
+    console.log('Response status:', response.status);
     const data = await response.json();
-    return data;
+    console.log('Response data:', data);
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch stories');
+    }
 
-  }
-  catch (error) {
-    console.error('Error fetching stories:', error);
+    return data;
+  } catch (error) {
+    console.error('Error detail:', {
+      message: error.message,
+      stack: error.stack
+    });
     throw error;
   }
-};
+}
 
 // get story detail function
 export async function getStoryDetail(id) {
   const token = getToken();
-  
+
   try {
     const response = await fetch(ENDPOINTS.GET_STORY_DETAIL(id), {
       method: 'GET',
@@ -159,14 +169,14 @@ export async function addStory(data) {
 };
 
 // export async function notification 
-export async function subscribePushNotification({endpoint, keys}) {
+export async function subscribePushNotification({ endpoint, keys }) {
   const token = getToken();
   if (!token) {
     throw new Error('User is not authenticated');
   }
 
   const response = await fetch(ENDPOINTS.SUBSCRIBE_PUSH_NOTIFICATION, {
-    method:'POST',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
@@ -175,14 +185,14 @@ export async function subscribePushNotification({endpoint, keys}) {
       endpoint,
       keys: {
         p256dh: keys.p256dh,
-        auth: keys.auth,  
+        auth: keys.auth,
       }
     })
   });
   return response;
 }
 
-export async function unsubscribePushNotification({endpoint}) {
+export async function unsubscribePushNotification({ endpoint }) {
   const token = getToken();
   if (!token) {
     throw new Error('User is not authenticated');
@@ -196,6 +206,6 @@ export async function unsubscribePushNotification({endpoint}) {
     },
     body: JSON.stringify({ endpoint }),
   });
-  
+
   return response;
 }
